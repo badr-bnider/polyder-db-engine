@@ -1,16 +1,33 @@
 const http = require("http");
 const fs = require("fs");
-var data;
+const url = require("url");
+const express = require("express");
 
-const server = http.createServer((req, res) => {
-  res.statusCode = 200;
-  res.setHeader("Content-Type", "text/plain");
-  res.end(
-    fs.readFileSync("data.json", "utf8", (err, jsonString) => {
-      if (err) {
-        return "Error: " + err;
-      }
-      return jsonString;
-    })
-  );
+const app = express();
+
+function findPath(id) {
+  if (id == undefined) {
+    return "./assets/error.json";
+  } else {
+    return "./files/" + id + "/" + id + ".json";
+  }
+}
+
+function authentication(id, pwd) {
+  var file = require(findPath(url));
+  if (file.pwd === pwd) {
+    return 1;
+  } else {
+    return 0;
+  }
+}
+
+
+app.get("/", (req, res) => {
+  let par = url.parse(req.url, true).query;
+  res.send(require(findPath(par.id)));
+});
+
+app.listen(8080, () => {
+  console.log(`Server are listening at 8080`);
 });
