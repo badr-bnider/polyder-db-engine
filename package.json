@@ -1,0 +1,15 @@
+{
+  "name": "polyder-db",
+  "version": "0.0.1",
+  "description": "Polyder is a simple database for an easy implementation of internet in your softwares in general.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "engines": {
+    "node": "12.x"
+  }
+}
