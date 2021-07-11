@@ -5,16 +5,26 @@ const express = require("express");
 
 const app = express();
 
-function findPath(id) {
-  if (id == undefined) {
-    return "./assets/error.json";
-  } else {
-    return "./files/" + id + "/" + id + ".json";
-  }
+app.get("/", (req, res) => {
+  let par = url.parse(req.url, true).query;
+  res.send(read(par.id));
+});
+
+app.listen(8080, () => {
+  console.log(`Server are listening at 8080`);
+});
+
+function read(id, pwd) {
+  return require(findPath(id));
+}
+
+function write(dataToWrite, id, pwd) {
+  JSON.stringify(dataToWrite);
+  fs.writeFile(findPath(id, dataToWrite));
 }
 
 function authentication(id, pwd) {
-  var file = require(findPath(url));
+  var file = read(id);
   if (file.pwd === pwd) {
     return 1;
   } else {
@@ -22,12 +32,10 @@ function authentication(id, pwd) {
   }
 }
 
-
-app.get("/", (req, res) => {
-  let par = url.parse(req.url, true).query;
-  res.send(require(findPath(par.id)));
-});
-
-app.listen(8080, () => {
-  console.log(`Server are listening at 8080`);
-});
+function findPath(id){
+  if (id == undefined) {
+    return "./files/public/error.json";
+  } else {
+    return "./files/" + id + "/" + id + ".json";
+  }
+}
